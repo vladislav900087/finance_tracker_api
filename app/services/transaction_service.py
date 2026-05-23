@@ -1,7 +1,7 @@
 import sqlalchemy.orm.exc
 from app.models.models import User, Transaction, Category
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import math
 
 # TRANSACTIONS CRUD
@@ -12,20 +12,27 @@ def is_valid_date(date_string: str, date_format: str) -> bool:
         return True
     except ValueError:
         return False
-def create_transaction(db, title, amount, transaction_type, category_title, username):
+def create_transaction(db, title, amount, transaction_type, username, category_title : Optional[str] = None):
     user = db.query(User).filter(User.username == username).first()
     if not user:
         raise ValueError('User not found')
 
-    category = db.query(Category).filter(Category.name == category_title).filter(Category.user_id == user.id).first()
 
-    if not category:
-        raise ValueError('No category found')
+
 
 
     try:
-        created_at = datetime.utcnow()
-        transaction = Transaction(title=title, amount=amount, type=transaction_type, category_id=category.id, user_id=user.id, created_at=created_at)
+        created_at = datetime.now(timezone.utc)
+        if category_title:
+            category = db.query(Category).filter(Category.name == category_title).filter(
+                Category.user_id == user.id).first()
+
+            transaction = Transaction(title=title, amount=amount, type=transaction_type, category_id=category.id, user_id=user.id, created_at=created_at)
+        else:
+            transaction = Transaction(title=title, amount=amount, type=transaction_type,
+                                  user_id=user.id, created_at=created_at)
+
+
 
 
         db.add(transaction)

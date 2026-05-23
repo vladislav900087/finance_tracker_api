@@ -8,8 +8,8 @@ from app.api.category_api import category_router
 main_app = FastAPI(title='Finance Tracker API')
 
 main_app.include_router(auth_router, prefix='/auth', tags=['Authentication'])
-main_app.include_router(transaction_router, prefix='/transaction', tags=['Manage Transactions'])
-main_app.include_router(category_router, prefix='/category', tags=['Category'])
+main_app.include_router(transaction_router, prefix='/transactions', tags=['Manage Transactions'])
+main_app.include_router(category_router, prefix='/categories', tags=['Category'])
 
 Base.metadata.create_all(bind=engine)
 

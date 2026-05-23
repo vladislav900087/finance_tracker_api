@@ -13,14 +13,14 @@ from app.auth.auth import get_current_active_user
 
 transaction_router = APIRouter()
 
-@transaction_router.post('/transactions/add/')
+@transaction_router.post('/add/')
 def add_transaction(data: TransactionCreate, db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_active_user)):
     try:
         return create_transaction(db=db, title=data.title, amount=data.amount, category_title=data.category_title, transaction_type=data.type, username=current_user.username)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@transaction_router.post('/transactions/update/')
+@transaction_router.post('/update/')
 def update_user_transaction(data: TransactionUpdate, db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_active_user)):
 
     try:
@@ -28,7 +28,7 @@ def update_user_transaction(data: TransactionUpdate, db: Session = Depends(get_d
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@transaction_router.delete('/transactions/delete/')
+@transaction_router.delete('/delete/')
 def delete_user_transaction(current_user: Annotated[UserBase, Depends(get_current_active_user)], data: TransactionDelete, db: Session = Depends(get_db)):
     try:
         return delete_transaction(db=db, username=current_user.username, transaction_title=data.transaction_title)
@@ -36,7 +36,7 @@ def delete_user_transaction(current_user: Annotated[UserBase, Depends(get_curren
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@transaction_router.get('/transactions/{username}/')
+@transaction_router.get('/all/')
 def get_user_transactions(
     current_user: Annotated[UserBase, Depends(get_current_active_user)],
     title: str | None = None,
@@ -58,7 +58,7 @@ def get_user_transactions(
         size=size
     )
 
-@transaction_router.get('/transactions/{username}/stats/')
+@transaction_router.get('/stats/')
 def get_user_transactions_stats(current_user: UserBase = Depends(get_current_active_user), from_date: str | None = None, to_date: str | None = None, category_title: str | None = None, db: Session = Depends(get_db)):
 
     try:

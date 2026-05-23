@@ -35,7 +35,7 @@ class TransactionCreate(BaseModel):
     title: str
     amount: int
     type: str
-    category_title: str
+    category_title: str | None
 
 
 class TransactionUpdate(BaseModel):

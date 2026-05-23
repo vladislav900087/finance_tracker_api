@@ -10,7 +10,7 @@ from app.schemas.schemas import UserBase
 
 category_router = APIRouter()
 
-@category_router.get('/categories/{username}')
+@category_router.get('/{username}')
 def get_user_categories(category_name: Optional[str] = None, date_time: Optional[str] = None, before_or_after: Optional[str] = None, db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_active_user)):
     service = CategoryService(db=db, username=current_user.username, category_name=category_name)
     try:
@@ -18,7 +18,7 @@ def get_user_categories(category_name: Optional[str] = None, date_time: Optional
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@category_router.post('/categories')
+@category_router.post('/add')
 def create_new_category(data: CategoryCreate, db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_active_user)):
     service = CategoryService(db=db, username=current_user.username, category_name=data.category_title)
     try:
@@ -26,7 +26,7 @@ def create_new_category(data: CategoryCreate, db: Session = Depends(get_db), cur
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@category_router.delete('/categories')
+@category_router.delete('/delete')
 def delete_category(category_name: str, db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_active_user)):
     service = CategoryService(db=db, category_name=category_name, username=current_user.username)
     try:

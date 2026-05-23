@@ -26,7 +26,7 @@ class Transaction(Base):
     type = Column(String, nullable=False)
     description = Column(String, nullable=True)
     currency = Column(String, nullable=True)
-    category_id = Column(Integer, ForeignKey('categories.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='transactions')
     category = relationship('Category', back_populates='transactions')
