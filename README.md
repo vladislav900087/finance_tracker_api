@@ -26,6 +26,11 @@ REST API for managing personal finances built with FastAPI and PostgreSQL.
 - Pytest
 - Docker
 
+## Swagger Documentation
+
+![Swagger UI](screenshots/swagger1.png)
+![Swagger UI](screenshots/swagger2.png)
+
 ## Installation
 
 ```bash
