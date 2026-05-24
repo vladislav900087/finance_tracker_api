@@ -64,3 +64,8 @@ def test_transactions():
     r4 = client.get('/transactions/stats/', headers={'Authorization': f'Bearer {token}'})
     assert r4.status_code == 200
 
+    r5 = client.request('DELETE', '/transactions/delete/', json={'transaction_title': new_transaction['title']}, headers={'Authorization': f'Bearer {token}'})
+    print(r5.status_code)
+    print(r5.text)
+    assert r5.status_code == 200
+

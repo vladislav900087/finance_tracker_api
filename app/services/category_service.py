@@ -74,7 +74,7 @@ class CategoryService:
         category = self.db.query(Category).filter(Category.user_id == user.id).filter(Category.name == self.category_name).first()
 
         if not category:
-            raise ValueError(404, 'Category not found')
+            raise ValueError(404, 'No category found')
 
         self.db.delete(category)
         self.db.commit()

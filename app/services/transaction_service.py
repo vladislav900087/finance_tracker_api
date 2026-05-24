@@ -198,7 +198,7 @@ def get_transaction_stats(db, username, from_date: Optional[str] = None, to_date
     if category_title:
         category = db.query(Category).filter(Category.name == category_title).filter(Category.user_id == user.id).first()
         if not category:
-            raise ValueError('Category not found')
+            raise ValueError('No category found')
 
         income_category_transactions = [transaction.amount for transaction in list(income_transactions.filter(Transaction.category_id == category.id).all())]
         expense_category_transactions = [transaction.amount for transaction in list(expense_transactions.filter(Transaction.category_id == category.id).all())]

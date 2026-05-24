@@ -107,7 +107,7 @@ def create_user(db, username, password, full_name, email):
         return {username: 'created'}
 
     except IntegrityError:
-        raise HTTPException(status_code=400, detail='User already exists')
+        raise HTTPException(status_code=409, detail='User already exists')
 
 
 

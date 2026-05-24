@@ -18,6 +18,10 @@ def add_transaction(data: TransactionCreate, db: Session = Depends(get_db), curr
     try:
         return create_transaction(db=db, title=data.title, amount=data.amount, category_title=data.category_title, transaction_type=data.type, username=current_user.username)
     except Exception as e:
+        if str(e) == 'User not found':
+            raise HTTPException(status_code=404, detail='User not found')
+        if 'Invalid parameters' in str(e):
+            raise HTTPException(status_code=400, detail='Invalid parameters')
         raise HTTPException(status_code=400, detail=str(e))
 
 @transaction_router.post('/update/')
@@ -26,6 +30,12 @@ def update_user_transaction(data: TransactionUpdate, db: Session = Depends(get_d
     try:
         return update_transaction(db=db, username=current_user.username, transaction_title=data.transaction_title, new_title=data.title, new_amount=data.amount, new_category=data.category_title, new_type=data.type)
     except Exception as e:
+        if 'User not found' in str(e):
+            raise HTTPException(status_code=404, detail='User not found')
+        if 'No category found' in str(e):
+            raise HTTPException(status_code=404, detail='No category found')
+        if 'No transaction found' in str(e):
+            raise HTTPException(status_code=404, detail='No transaction found')
         raise HTTPException(status_code=400, detail=str(e))
 
 @transaction_router.delete('/delete/')
@@ -33,6 +43,10 @@ def delete_user_transaction(current_user: Annotated[UserBase, Depends(get_curren
     try:
         return delete_transaction(db=db, username=current_user.username, transaction_title=data.transaction_title)
     except Exception as e:
+        if 'User not found' in str(e):
+            raise HTTPException(status_code=404, detail='User not found')
+        if 'No transaction found' in str(e):
+            raise HTTPException(status_code=404, detail='No transaction found')
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -47,16 +61,26 @@ def get_user_transactions(
     size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    return get_all_transactions(
-        username=current_user.username,
-        db=db,
-        title=title,
-        amount=amount,
-        category_title=category_title,
-        transaction_type=transaction_type,
-        page=page,
-        size=size
-    )
+
+    try:
+        return get_all_transactions(
+            username=current_user.username,
+            db=db,
+            title=title,
+            amount=amount,
+            category_title=category_title,
+            transaction_type=transaction_type,
+            page=page,
+            size=size
+        )
+    except Exception as e:
+        if 'User not found' in str(e):
+            raise HTTPException(status_code=404, detail='User not found')
+        if 'No category found' in str(e):
+            raise HTTPException(status_code=404, detail='No category found')
+
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 @transaction_router.get('/stats/')
 def get_user_transactions_stats(current_user: UserBase = Depends(get_current_active_user), from_date: str | None = None, to_date: str | None = None, category_title: str | None = None, db: Session = Depends(get_db)):
@@ -66,6 +90,11 @@ def get_user_transactions_stats(current_user: UserBase = Depends(get_current_act
     except NoResultFound as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
+        if 'User not found' in str(e):
+            raise HTTPException(status_code=404, detail='User not found')
+        if 'No category found' in str(e):
+            raise HTTPException(status_code=404, detail='No category found')
+
         raise HTTPException(status_code=400, detail=str(e))
 
 
