@@ -14,6 +14,9 @@ REST API for managing personal finances built with FastAPI and PostgreSQL.
 - Docker support
 - Render deployment
 
+## Deployment link
+- https://finance-tracker-api-2-m62f.onrender.com/docs
+
 ## Tech Stack
 
 - Python
